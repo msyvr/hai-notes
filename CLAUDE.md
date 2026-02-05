@@ -20,9 +20,12 @@ Location: `~/.claude/session-notes/{project-name}/`
 
 ## Session Start
 
-1. Determine project name (basename of project root)
-2. Skim `index.md` for recent session summaries
-3. If the current task relates to prior work, load the relevant session file **before starting**
+1. SessionStart hook outputs project resolution status
+2. If output contains `NO_MATCH:`, prompt user with the choices shown (y/n/c)
+3. Otherwise, use the indicated session project
+4. Create session file if needed: `{project-name}/{timestamp}.md`
+5. Skim `index.md` for recent session summaries
+6. If the current task relates to prior work, load the relevant session file **before starting**
 
 ## Before Major Decisions
 

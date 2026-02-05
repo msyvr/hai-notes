@@ -1,2 +1,12 @@
 ## Claude-native files
+cache/
 debug/
+downloads/
+plans/
+plugins/
+projects/
+session-env/
+session-notes/
+shell-snapshots/
+todos/
+history.jsonl

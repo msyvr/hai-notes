@@ -1,4 +1,4 @@
-# HAI Notes
+# :notes: HAI Notes
 
 A context continuity system for Claude Code that persists project knowledge across sessions and compactions.
 

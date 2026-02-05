@@ -6,8 +6,8 @@
       {
         "hooks": [
           {
-            "type": "prompt",
-            "prompt": "Resolve session project:\n1. Let dir_name = basename of current working directory\n2. Check if ~/.claude/session-notes/{dir_name}/ exists\n3. If yes: use dir_name as session_project, proceed silently to step 5\n4. If no: prompt user:\n   'No existing session notes for \"{dir_name}\".\n   [y] Use \"{dir_name}\" as project name\n   [n] Choose from existing projects\n   [c] Enter custom name'\n   - y: set session_project to dir_name\n   - n: list ~/.claude/session-notes/*/ subdirs, user selects, set session_project\n   - c: prompt for name, set session_project\n5. Create ~/.claude/session-notes/{session_project}/ if needed\n6. Create session file: {session_project}/{timestamp}.md with frontmatter\n7. Write session file path to {session_project}/.current_session\n8. Check index.md for most recent session summary to understand where we left off"
+            "type": "command",
+            "command": "dir_name=$(basename \"$PWD\"); notes_dir=\"$HOME/.claude/session-notes/$dir_name\"; mkdir -p \"$notes_dir\"; if [ -f \"$notes_dir/index.md\" ]; then echo \"Session project: $dir_name\"; echo \"Session file: $notes_dir/$(date +%Y-%m-%d-%H%M).md\"; echo '---'; echo 'Recent sessions:'; tail -20 \"$notes_dir/index.md\"; else echo \"NO_MATCH: Directory '$dir_name' has no existing session notes.\"; echo \"Existing projects:\"; ls \"$HOME/.claude/session-notes/\" 2>/dev/null || echo '(none)'; echo \"Ask user: [y] create '$dir_name' | [n] choose existing | [c] custom name\"; fi"
           }
         ]
       },
@@ -16,16 +16,6 @@
           {
             "type": "command",
             "command": "project=$(basename \"$PWD\"); ctx=\"$HOME/.claude/session-notes/$project\"; orphans=$(find \"$ctx\" -maxdepth 1 -type f -name '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9].md' 2>/dev/null | grep -v \"$(cat \"$ctx/.current_session\" 2>/dev/null)\" | head -5); if [ -n \"$orphans\" ]; then echo \"Found unnamed session files that need topics:\"; echo \"$orphans\"; echo \"Run /name-orphaned-notes to rename them.\"; fi"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "prompt",
-            "prompt": "Check if a meaningful unit of work just completed: a task finished, a decision reached, a subproblem solved, or a pivot in direction. If yes AND you have not suggested /take-notes in your last 3 responses, append a brief reminder that the user might want to run /take-notes. Otherwise do nothing."
           }
         ]
       }
@@ -44,8 +34,8 @@
       {
         "hooks": [
           {
-            "type": "prompt",
-            "prompt": "Session is ending. Before closing:\n\n1. Run /take-notes to capture any unsaved work\n2. Read the current session file (path in ~/.claude/session-notes/{project-name}/.current_session)\n3. Based on its contents, choose a kebab-case topic suffix (e.g., 'context-memory-setup', 'reward-shaping')\n4. Rename the file from {date-time}.md to {date-time}-{topic}.md\n5. Update the index.md entry with the new filename\n\nIf the session file is empty or minimal, delete it and remove any index entry."
+            "type": "command",
+            "command": "echo '⚠️  Run /take-notes before exiting to save final session state'"
           }
         ]
       },
