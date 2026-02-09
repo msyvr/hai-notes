@@ -2,11 +2,16 @@
 cache/
 debug/
 downloads/
+file-history/
+paste-cache/
 plans/
 plugins/
 projects/
 session-env/
 session-notes/
 shell-snapshots/
+tasks/
+telemetry/
 todos/
 history.jsonl
+stats-cache.json

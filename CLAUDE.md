@@ -24,8 +24,14 @@ Location: `~/.claude/session-notes/{project-name}/`
 2. If output contains `NO_MATCH:`, prompt user with the choices shown (y/n/c)
 3. Otherwise, use the indicated session project
 4. Create session file if needed: `{project-name}/{timestamp}.md`
-5. Skim `index.md` for recent session summaries
-6. If the current task relates to prior work, load the relevant session file **before starting**
+   - `.current_session` contains just the timestamp prefix (e.g., `2026-02-08-1640`), written once by the hook, never updated
+   - To find the actual file, glob for `{timestamp}*.md` in the project directory
+5. Add an initial entry in `index.md` for this session file:
+   - **Tags**: `no-notes`
+   - **Summary**: `no notes taken yet`
+   - Rename the file to `{timestamp}-no-notes.md`
+6. Skim `index.md` for recent session summaries
+7. If the current task relates to prior work, load the relevant session file **before starting**
 
 ## Before Major Decisions
 
@@ -190,14 +196,12 @@ The sentinel `SESSION_NOTES_CHECKPOINT` marks where the last save ended. When sa
 2. Summarize only what happened after that point (or entire session if no sentinel)
 3. End with the sentinel
 
-## Session End
-
-When a session ends, the session file is renamed from `{timestamp}.md` to `{timestamp}-{topic}.md` based on its contents.
-
 ## Available Commands
 
 - `/take-notes` — Save current progress to session file
-- `/name-orphaned-notes` — Rename session files from abruptly ended sessions
+- `/review-notes [query]` — Search session notes for relevant context
+- `/move-note [project]` — Extract latest checkpoint to a different project's notes
+- `/move-current-session-notes [project]` — Move entire current session file to a different project
 
 ## Session Notes Directory Structure
 
@@ -207,5 +211,5 @@ When a session ends, the session file is renamed from `{timestamp}.md` to `{time
 ├── .session.log                          # Session timestamps
 ├── .current_session                      # Path to active session file
 ├── 2026-02-03-0945-context-memory.md     # Completed session
-└── 2026-02-03-1430.md                    # Active session (renamed at end)
+└── 2026-02-03-1430-no-notes.md           # Session where /take-notes was never called
 ```

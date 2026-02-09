@@ -1,21 +1,12 @@
 {
   "cleanupPeriodDays": 60,
-  "alwaysThinkingEnabled": true,
   "hooks": {
     "SessionStart": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "dir_name=$(basename \"$PWD\"); notes_dir=\"$HOME/.claude/session-notes/$dir_name\"; mkdir -p \"$notes_dir\"; if [ -f \"$notes_dir/index.md\" ]; then echo \"Session project: $dir_name\"; echo \"Session file: $notes_dir/$(date +%Y-%m-%d-%H%M).md\"; echo '---'; echo 'Recent sessions:'; tail -20 \"$notes_dir/index.md\"; else echo \"NO_MATCH: Directory '$dir_name' has no existing session notes.\"; echo \"Existing projects:\"; ls \"$HOME/.claude/session-notes/\" 2>/dev/null || echo '(none)'; echo \"Ask user: [y] create '$dir_name' | [n] choose existing | [c] custom name\"; fi"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "project=$(basename \"$PWD\"); ctx=\"$HOME/.claude/session-notes/$project\"; orphans=$(find \"$ctx\" -maxdepth 1 -type f -name '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9].md' 2>/dev/null | grep -v \"$(cat \"$ctx/.current_session\" 2>/dev/null)\" | head -5); if [ -n \"$orphans\" ]; then echo \"Found unnamed session files that need topics:\"; echo \"$orphans\"; echo \"Run /name-orphaned-notes to rename them.\"; fi"
+            "command": "dir_name=$(basename \"$PWD\"); notes_dir=\"$HOME/.claude/session-notes/$dir_name\"; mkdir -p \"$notes_dir\"; ts=$(date +%Y-%m-%d-%H%M); session_file=\"$notes_dir/$ts.md\"; if [ -f \"$notes_dir/index.md\" ]; then touch \"$session_file\"; echo \"$ts\" > \"$notes_dir/.current_session\"; echo \"Session project: $dir_name\"; echo \"Session timestamp: $ts\"; echo '---'; echo 'Recent sessions:'; tail -20 \"$notes_dir/index.md\"; else echo \"NO_MATCH: Directory '$dir_name' has no existing session notes.\"; echo \"Existing projects:\"; ls \"$HOME/.claude/session-notes/\" 2>/dev/null || echo '(none)'; echo \"Ask user: [y] create '$dir_name' | [n] choose existing | [c] custom name\"; fi"
           }
         ]
       }
@@ -48,5 +39,6 @@
         ]
       }
     ]
-  }
+  },
+  "alwaysThinkingEnabled": true
 }
