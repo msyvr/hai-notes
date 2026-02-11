@@ -10,7 +10,9 @@ Save current progress to the session file.
    - If found: create detailed notes about both process and outcomes for only what happened AFTER that point
    - If not found: create detailed notes about both process and outcomes from session start
 
-3. Append to the session file with a timestamp header:
+3. Use the /refine skill to improve notes, making sure there's enough detail to replicate findings.
+
+4. Append to the session file with a timestamp header:
 
    ```markdown
    ## [HH:MM] Checkpoint
@@ -24,7 +26,7 @@ Save current progress to the session file.
    **Next steps:** [concrete actions]
    ```
 
-4. Update `~/.claude/session-notes/{project-name}/index.md`:
+5. Update `~/.claude/session-notes/{project-name}/index.md`:
    - If no entry exists for this session file, add one
    - Update tags and summary to reflect latest state
 
@@ -48,13 +50,13 @@ Save current progress to the session file.
    ---
    ```
 
-5. **Rename session file to reflect dominant theme:**
+6. **Rename session file to reflect dominant theme:**
    - From the tags and summary you just wrote in the index entry, pick the single most dominant theme (1-3 words, kebab-case).
    - If the file already has the correct suffix, do nothing.
    - Otherwise, use `AskUserQuestion` to propose the theme (as the first option) and offer "Keep current name" as the second. The user can also type their own via "Other".
    - Rename to the confirmed theme, then update the `## {filename}` heading in `index.md` to match.
    - (`.current_session` stores only the timestamp prefix, so no update needed.)
 
-6. End your response with exactly:
+7. End your response with exactly:
 
 SESSION_NOTES_CHECKPOINT
