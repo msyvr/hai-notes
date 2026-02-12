@@ -23,13 +23,11 @@ Location: `~/.claude/session-notes/{project-name}/`
 1. SessionStart hook outputs project resolution status
 2. If output contains `NO_MATCH:`, prompt user with the choices shown (y/n/c)
 3. Otherwise, use the indicated session project
-4. Create session file if needed: `{project-name}/{timestamp}.md`
-   - `.current_session` contains just the timestamp prefix (e.g., `2026-02-08-1640`), written once by the hook, never updated
+4. The hook creates `{timestamp}-no-notes.md` and writes the timestamp prefix to `.current_session`
    - To find the actual file, glob for `{timestamp}*.md` in the project directory
 5. Add an initial entry in `index.md` for this session file:
    - **Tags**: `no-notes`
    - **Summary**: `no notes taken yet`
-   - Rename the file to `{timestamp}-no-notes.md`
 6. Skim `index.md` for recent session summaries
 7. If the current task relates to prior work, load the relevant session file **before starting**
 

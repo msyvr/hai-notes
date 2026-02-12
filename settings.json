@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "dir_name=$(basename \"$PWD\"); notes_dir=\"$HOME/.claude/session-notes/$dir_name\"; mkdir -p \"$notes_dir\"; ts=$(date +%Y-%m-%d-%H%M); session_file=\"$notes_dir/$ts.md\"; if [ -f \"$notes_dir/index.md\" ]; then touch \"$session_file\"; echo \"$ts\" > \"$notes_dir/.current_session\"; echo \"Session project: $dir_name\"; echo \"Session timestamp: $ts\"; echo '---'; echo 'Recent sessions:'; tail -20 \"$notes_dir/index.md\"; else echo \"NO_MATCH: Directory '$dir_name' has no existing session notes.\"; echo \"Existing projects:\"; ls \"$HOME/.claude/session-notes/\" 2>/dev/null || echo '(none)'; echo \"Ask user: [y] create '$dir_name' | [n] choose existing | [c] custom name\"; fi"
+            "command": "dir_name=$(basename \"$PWD\"); notes_dir=\"$HOME/.claude/session-notes/$dir_name\"; mkdir -p \"$notes_dir\"; ts=$(date +%Y-%m-%d-%H%M); session_file=\"$notes_dir/$ts-no-notes.md\"; if [ -f \"$notes_dir/index.md\" ]; then touch \"$session_file\"; echo \"$ts\" > \"$notes_dir/.current_session\"; echo \"Session project: $dir_name\"; echo \"Session timestamp: $ts\"; echo '---'; echo 'Recent sessions:'; tail -20 \"$notes_dir/index.md\"; else echo \"NO_MATCH: Directory '$dir_name' has no existing session notes.\"; echo \"Existing projects:\"; ls \"$HOME/.claude/session-notes/\" 2>/dev/null || echo '(none)'; echo \"Ask user: [y] create '$dir_name' | [n] choose existing | [c] custom name\"; fi"
           }
         ]
       }

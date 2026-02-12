@@ -54,7 +54,8 @@ Save current progress to the session file.
    - From the tags and summary you just wrote in the index entry, pick the single most dominant theme (1-3 words, kebab-case).
    - If the file already has the correct suffix, do nothing.
    - Otherwise, use `AskUserQuestion` to propose the theme (as the first option) and offer "Keep current name" as the second. The user can also type their own via "Other".
-   - Rename to the confirmed theme, then update the `## {filename}` heading in `index.md` to match.
+   - **Use `mv` via Bash** to rename (not Write — Write creates a new file and leaves the old one behind).
+   - Update the `## {filename}` heading in `index.md` to match.
    - (`.current_session` stores only the timestamp prefix, so no update needed.)
 
 7. End your response with exactly:
