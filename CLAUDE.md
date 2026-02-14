@@ -123,7 +123,7 @@ Use Plan Mode for strategy and architectural discussions, and for coding tasks u
 
 After substantive responses (explanations, code, analysis), append:
 
-_Run `/refine N` to iterate on this response (N = 2-9)_
+_Run `/refine N` to iterate on this response (N = 1-9)_
 
 ## Software Development Workflow
 

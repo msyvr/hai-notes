@@ -19,6 +19,9 @@ Claude Code sessions lose context on compaction and between sessions. This syste
 ├── settings.json                      # Hooks (SessionStart, PreCompact, etc.)
 ├── commands/
 │   ├── take-notes.md                  # Save current session state
+│   ├── review-notes.md               # Search session notes for context
+│   ├── move-note.md                  # Move checkpoint to another project
+│   ├── move-current-session-notes.md # Move session file to another project
 │   ├── refine.md                      # Iterative response improvement
 │   ├── qlog.md                        # Log knowledge gaps
 │   ├── check-commit.md                # Pre-commit review
@@ -26,8 +29,8 @@ Claude Code sessions lose context on compaction and between sessions. This syste
 └── session-notes/
     └── {project-name}/
         ├── index.md                   # Searchable session index (tags, summaries)
-        ├── {timestamp}.md             # Individual session files
-        ├── {timestamp}-{topic}.md     # Renamed after completion
+        ├── {timestamp}-no-notes.md    # Created by hook; renamed by /take-notes
+        ├── {timestamp}-{topic}.md     # Renamed after /take-notes
         └── open-questions/
             └── log.md                 # Append-only knowledge gap log
 ```
@@ -37,9 +40,10 @@ Claude Code sessions lose context on compaction and between sessions. This syste
 **Session start:**
 
 1. Project name derived from launch directory basename
-2. Mismatch detection prompts if launched from subdirectory
-3. Claude skims `index.md` for recent session context
-4. Loads specific session files only when relevant
+2. If no session notes exist for the directory, prompts to create or choose a project
+3. Hook creates `{timestamp}-no-notes.md` and writes `.current_session`
+4. Claude skims `index.md` for recent session context
+5. Loads specific session files only when relevant
 
 **During work:**
 
@@ -49,27 +53,32 @@ Claude Code sessions lose context on compaction and between sessions. This syste
 
 **Session end:**
 
-- State saved with topic suffix
-- Index updated with tags and summary
+- SessionEnd hook logs to `.session.log` and reminds to run `/take-notes`
+- `/take-notes` renames file with topic suffix and updates index
 
 ## Slash Commands
 
-| Command         | Purpose                                           |
-| --------------- | ------------------------------------------------- |
-| `/take-notes`   | Save session state to timestamped file            |
-| `/refine N`     | Iterate N times (2-9) on previous response        |
-| `/qlog`         | Log a knowledge gap (location, question, urgency) |
-| `/check-commit` | Review staged changes before commit               |
-| `/check-pr`     | Self-review before submitting PR                  |
+| Command                          | Purpose                                                              |
+| -------------------------------- | -------------------------------------------------------------------- |
+| `/take-notes`                    | Save session state to timestamped file                               |
+| `/review-notes [query]`         | Search session notes for relevant context                            |
+| `/move-note [project]`          | Move latest checkpoint to another project's notes                    |
+| `/move-current-session-notes [project]` | Move entire current session file to another project           |
+| `/refine N [args]`              | Iterate N times (1-9); args can be directive, preamble, or new prompt |
+| `/qlog`                         | Log a knowledge gap (location, question, urgency)                    |
+| `/check-commit`                 | Review staged changes before commit                                  |
+| `/check-pr`                     | Self-review before submitting PR                                     |
 
-## Session File Schema
+## Session File Format
 
-Each session file contains structured sections:
+Each `/take-notes` checkpoint appends:
 
-- **Approaches Tried** — what was attempted, outcomes, why kept/abandoned
-- **Constraints Discovered** — limitations, dependencies, edge cases
-- **Decisions Made** — choice, alternatives, reasoning
-- **Open Questions** — unresolved issues, things to investigate
+- **Accomplished** — what was completed
+- **Decisions** — key decisions with reasoning
+- **Open questions** — unresolved issues and related discussion
+- **Next steps** — concrete actions
+
+CLAUDE.md also provides broader content guidelines (Approaches Tried, Constraints Discovered, etc.) for structuring session thinking.
 
 ## Context Organization Principle
 
@@ -125,7 +134,7 @@ Five-step process for non-trivial tasks:
 
 ## Response Iteration
 
-After substantive responses, `/refine N` available (N = 2-9) for iterative improvement. Claude auto-runs refinement for complex code with multiple valid approaches.
+After substantive responses, `/refine N` available (N = 1-9) for iterative improvement. Extra arguments serve as a refinement directive, preamble context, or new prompt. Claude auto-runs refinement for complex code with multiple valid approaches.
 
 ## Plan Mode
 
