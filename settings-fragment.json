@@ -1,0 +1,42 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "dir_name=$(basename \"$PWD\"); notes_dir=\"$HOME/.claude/session-notes/$dir_name\"; mkdir -p \"$notes_dir\"; ts=$(date +%Y-%m-%d-%H%M); session_file=\"$notes_dir/$ts-no-notes.md\"; if [ -f \"$notes_dir/index.md\" ]; then touch \"$session_file\"; echo \"$ts\" > \"$notes_dir/.current_session\"; echo \"Session project: $dir_name\"; echo \"Session timestamp: $ts\"; echo '---'; echo 'Recent sessions:'; tail -20 \"$notes_dir/index.md\"; else echo \"NO_MATCH: Directory '$dir_name' has no existing session notes.\"; echo \"Existing projects:\"; ls \"$HOME/.claude/session-notes/\" 2>/dev/null || echo '(none)'; echo \"Ask user: [y] create '$dir_name' | [n] choose existing | [c] custom name\"; fi"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Context is about to be compacted. Run /take-notes now to preserve session state before compaction."
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '⚠️  Run /take-notes before exiting to save final session state'"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "project=$(basename \"$PWD\"); ctx=\"$HOME/.claude/session-notes/$project\"; echo \"$(date -Iseconds) session ended\" >> \"$ctx/.session.log\""
+          }
+        ]
+      }
+    ]
+  }
+}
