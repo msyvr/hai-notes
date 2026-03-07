@@ -63,18 +63,6 @@ Save current progress to the session file.
    - Update the `## {filename}` heading in `index.md` to match.
    - (`.current_session` stores only the timestamp prefix, so no update needed.)
 
-7. **Auto-memory promotion:** Review the checkpoint you just wrote and ask whether any findings should be promoted to auto-memory (`MEMORY.md`). Candidates are:
-   - Facts verified during this session that will remain true across sessions (e.g., build constraints, key file paths, API behaviors)
-   - Solutions to problems that are likely to recur
-   - User preferences or conventions established during the session
-
-   Skip anything that is:
-   - Session-specific or in-progress (belongs in session notes only)
-   - Speculative or unverified from a single observation
-   - Already in MEMORY.md or CLAUDE.md
-
-   If there are candidates: read MEMORY.md, then present them to the user via `AskUserQuestion` (multiSelect, so they can approve some and reject others). Write approved entries. If nothing qualifies, move on silently.
-
-8. End your response with exactly:
+7. End your response with exactly:
 
 SESSION_NOTES_CHECKPOINT
